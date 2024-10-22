@@ -2,6 +2,7 @@ import express, { urlencoded } from 'express'
 import 'dotenv/config'
 import cors from 'cors'
 import thingsRouter from './routes/thingsRouter.js'
+import usersRouter from './routes/usersRouter.js'
 import mongoose from 'mongoose'
 
 const app = express()
@@ -11,7 +12,7 @@ app.use(cors())
 app.use(express.json())
 app.use(urlencoded({extended : false}))
 
-app.use(thingsRouter)
+app.use(thingsRouter, usersRouter)
 
 app.get('/', (req, res) => {
     return res.send(`Welcome to my API`)
