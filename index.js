@@ -1,16 +1,54 @@
-import express from 'express'
+import express, { urlencoded } from 'express'
 import 'dotenv/config'
+import cors from 'cors'
 
 const app = express()
-
 const PORT = process.env.PORT
+app.use(cors())
 
-app.get('/', (request, response) => {
-    return response.send(`Welcome to my API`)
+app.use(express.json())
+app.use(urlencoded({extended : false}))
+
+const movies = [
+    {
+        id : 1,
+        title : 'Dracula',
+        genre : 'Horror'
+    },
+    {
+        id : 2,
+        title : 'Old boy',
+        genre : 'Thriller',
+    },
+    {
+        id : 3,
+        title : 'Blade runner',
+        genre : 'Science-fiction',
+    }
+]
+
+app.get('/', (req, res) => {
+    return res.send(`Welcome to my API`)
 })
 
-app.get('/users', (req, res) => {
-    return res.send(`Hello users`)
+app.get('/movies', (req, res) => {
+    return res.json(movies)
+})
+
+app.get('/movies/:movieID', (req, res) => {
+    let movieID = req.params.movieID
+    let movie = movies.find(el => el.id == movieID)
+    return res.json(movie)
+})
+
+app.post('/movies', (req, res) => {
+    let newMovie = {
+        id : movies.length+1,
+        title : req.body.title,
+        genre : req.body.genre
+    }
+    movies.push(newMovie)
+    return res.json(newMovie)
 })
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT} :)`))
